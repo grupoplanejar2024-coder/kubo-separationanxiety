@@ -19,7 +19,6 @@
         .btn-play { display: block; width: 100%; padding: 12px; background: #27ae60; color: #fff; border: none; border-radius: 6px; font-weight: bold; font-size: 16px; cursor: pointer; text-align: center; }
         .btn-play:hover { background: #219150; }
         
-        /* Container ajustado para viewport cheia */
         #game-container { display: none; width: 100vw; height: 100vh; position: fixed; top: 0; left: 0; z-index: 9999; background: #000; }
         #game { width: 100%; height: 100%; }
     </style>
@@ -60,12 +59,10 @@
 
     <script>
         function startEmulator() {
-            // Exibe a div em tela cheia ANTES de configurar as variáveis do emulador
             document.getElementById('game-container').style.display = 'block';
             document.getElementById('game-card').style.display = 'none';
             document.getElementById('main-header').style.display = 'none';
 
-            // Configurações do EmulatorJS
             window.EJS_player = "#game";
             window.EJS_core = "snes9x";
             window.EJS_gameName = "Spider-Man Separation Anxiety";
@@ -73,9 +70,9 @@
             window.EJS_startOnLoaded = true;
             window.EJS_pathtodata = "https://cdn.emulatorjs.org/stable/data/";
             
-            // URL Absoluta do próprio repositório para evitar falha no carregamento relativo
-          "separationanxiety.sfc";
-            // Pequeno delay de 100ms para garantir que o DOM renderizou o elemento #game com dimensões válidas
+            // Caminho limpo direto para o arquivo na raiz
+            window.EJS_gameUrl = "separationanxiety.sfc";
+
             setTimeout(function() {
                 let script = document.createElement("script");
                 script.src = "https://cdn.emulatorjs.org/stable/data/loader.js";
