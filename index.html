@@ -57,28 +57,29 @@
         <div id="game"></div>
     </div>
 
-    <script>
-        function startEmulator() {
-            document.getElementById('game-container').style.display = 'block';
-            document.getElementById('game-card').style.display = 'none';
-            document.getElementById('main-header').style.display = 'none';
+  <script>
+function startEmulator() {
+    document.getElementById('game-container').style.display = 'block';
+    document.getElementById('game-card').style.display = 'none';
+    document.getElementById('main-header').style.display = 'none';
 
-            window.EJS_player = "#game";
-            window.EJS_core = "snes9x";
-            window.EJS_gameName = "Spider-Man Separation Anxiety";
-            window.EJS_color = "#f39c12";
-            window.EJS_startOnLoaded = true;
-            window.EJS_pathtodata = "https://cdn.emulatorjs.org/stable/data/";
-            
-            // Caminho limpo direto para o arquivo na raiz
-            window.EJS_gameUrl = "separationanxiety.sfc";
+    window.EJS_player = "#game";
+    window.EJS_core = "snes";
+    window.EJS_gameName = "Spider-Man Separation Anxiety";
+    window.EJS_color = "#f39c12";
+    window.EJS_startOnLoaded = true;
+    window.EJS_pathtodata = "https://cdn.emulatorjs.org/stable/data/";
+    window.EJS_gameUrl = "./separationanxiety.sfc";
 
-            setTimeout(function() {
-                let script = document.createElement("script");
-                script.src = "https://cdn.emulatorjs.org/stable/data/loader.js";
-                document.body.appendChild(script);
-            }, 100);
-        }
-    </script>
+    const script = document.createElement("script");
+    script.src = window.EJS_pathtodata + "loader.js";
+
+    script.onerror = function() {
+        alert("Erro ao carregar o EmulatorJS. Verifique sua conexão e tente novamente.");
+    };
+
+    document.body.appendChild(script);
+}
+</script>
 </body>
 </html>
