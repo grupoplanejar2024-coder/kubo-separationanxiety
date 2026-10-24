@@ -24,7 +24,7 @@
 </head>
 <body>
 
-    <header>
+    <header id="main-header">
         <span class="badge">KUBO TOUCH</span>
     </header>
 
@@ -60,6 +60,7 @@
 
     <script>
         function startEmulator() {
+            document.getElementById('main-header').style.display = 'none';
             document.getElementById('game-card').style.display = 'none';
             document.getElementById('game-container').style.display = 'block';
 
@@ -70,8 +71,8 @@
             window.EJS_startOnLoaded = true;
             window.EJS_pathtodata = "https://cdn.emulatorjs.org/stable/data/";
             
-            // Link direto para a ROM do Separation Anxiety no novo repositório
-            window.EJS_gameUrl = "https://raw.githubusercontent.com/grupoplanejar2024-coder/kubo-separationanxiety/main/separationanxiety.sfc";
+            // Usando o caminho relativo direto do repositório
+            window.EJS_gameUrl = "separationanxiety.sfc";
 
             let script = document.createElement("script");
             script.src = "https://cdn.emulatorjs.org/stable/data/loader.js";
