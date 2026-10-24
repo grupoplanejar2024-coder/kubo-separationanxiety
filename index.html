@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Spider-Man: Separation Anxiety - Kubo Touch</title>
     <style>
-        body, html { margin: 0; padding: 0; width: 100%; height: 100%; background-color: #121212; color: #fff; font-family: Arial, sans-serif; }
+        body, html { margin: 0; padding: 0; width: 100%; height: 100%; background-color: #121212; color: #fff; font-family: Arial, sans-serif; overflow: hidden; }
         header { text-align: center; padding: 15px; background: #1e1e1e; }
         .badge { background: #f39c12; color: #fff; padding: 4px 12px; border-radius: 20px; font-weight: bold; font-size: 14px; }
         #game-card { max-width: 500px; margin: 20px auto; background: #1e1e1e; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.5); }
@@ -18,7 +18,9 @@
         .details ul { padding-left: 20px; margin: 0; }
         .btn-play { display: block; width: 100%; padding: 12px; background: #27ae60; color: #fff; border: none; border-radius: 6px; font-weight: bold; font-size: 16px; cursor: pointer; text-align: center; }
         .btn-play:hover { background: #219150; }
-        #game-container { display: none; width: 100%; height: 100vh; }
+        
+        /* Container ajustado para viewport cheia */
+        #game-container { display: none; width: 100vw; height: 100vh; position: fixed; top: 0; left: 0; z-index: 9999; background: #000; }
         #game { width: 100%; height: 100%; }
     </style>
 </head>
@@ -53,17 +55,17 @@
     </div>
 
     <div id="game-container">
-        <div style="width:100%; height:100%; max-width:100%;">
-            <div id="game"></div>
-        </div>
+        <div id="game"></div>
     </div>
 
     <script>
         function startEmulator() {
-            document.getElementById('main-header').style.display = 'none';
-            document.getElementById('game-card').style.display = 'none';
+            // Exibe a div em tela cheia ANTES de configurar as variáveis do emulador
             document.getElementById('game-container').style.display = 'block';
+            document.getElementById('game-card').style.display = 'none';
+            document.getElementById('main-header').style.display = 'none';
 
+            // Configurações do EmulatorJS
             window.EJS_player = "#game";
             window.EJS_core = "snes9x";
             window.EJS_gameName = "Spider-Man Separation Anxiety";
@@ -71,12 +73,15 @@
             window.EJS_startOnLoaded = true;
             window.EJS_pathtodata = "https://cdn.emulatorjs.org/stable/data/";
             
-            // Apontando diretamente para o arquivo local da ROM no repositório
-            window.EJS_gameUrl = "separationanxiety.sfc";
+            // URL Absoluta do próprio repositório para evitar falha no carregamento relativo
+            window.EJS_gameUrl = "./separationanxiety.sfc";
 
-            let script = document.createElement("script");
-            script.src = "https://cdn.emulatorjs.org/stable/data/loader.js";
-            document.body.appendChild(script);
+            // Pequeno delay de 100ms para garantir que o DOM renderizou o elemento #game com dimensões válidas
+            setTimeout(function() {
+                let script = document.createElement("script");
+                script.src = "https://cdn.emulatorjs.org/stable/data/loader.js";
+                document.body.appendChild(script);
+            }, 100);
         }
     </script>
 </body>
