@@ -1,80 +1,86 @@
-
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-br">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-<title>Spider-Man: Separation Anxiety - Kubo Touch</title>
-<style>
-*{box-sizing:border-box}html,body{margin:0;min-height:100%;background:#121212;color:#fff;font-family:Arial,sans-serif}body{overflow-x:hidden}header{text-align:center;padding:14px;background:#1e1e1e}.badge{display:inline-block;background:#f39c12;color:#111;padding:5px 13px;border-radius:20px;font-weight:bold;font-size:14px}#game-card{max-width:500px;margin:20px auto;background:#1e1e1e;border-radius:12px;overflow:hidden;box-shadow:0 4px 20px #0008}.cover{height:250px;background:#171717 url('separationanxiety-cover.jpg') center/cover no-repeat}.content{padding:20px}h1{margin:0 0 12px;color:#f1c40f;font-size:24px}.meta{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:15px;color:#bbb;font-size:13px}.description{font-size:14px;line-height:1.5;color:#ddd}.details{font-size:13px;color:#bbb;margin:16px 0}.btn{display:block;width:100%;padding:13px;background:#27ae60;color:white;border:0;border-radius:6px;font-size:16px;font-weight:bold;cursor:pointer}.btn:disabled{opacity:.6;cursor:wait}#game-container{display:none;position:fixed;inset:0;width:100%;height:100dvh;z-index:9999;background:#000}#game{width:100%;height:100%;min-height:300px}#status{margin-top:12px;padding:10px;border-radius:6px;background:#101010;color:#ddd;font-size:13px;line-height:1.5;overflow-wrap:anywhere}#error-box{display:none;margin:12px 0;padding:12px;background:#491d1d;color:#fff;border:1px solid #b33;border-radius:6px;line-height:1.5}#back{display:none;position:fixed;top:8px;left:8px;z-index:10001;padding:8px 12px;background:#f39c12;color:#111;border:0;border-radius:6px;font-weight:bold}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Venom • Spider-Man: Separation Anxiety - Kubo Touch</title>
+    <style>
+        body, html { margin: 0; padding: 0; width: 100%; height: 100%; background-color: #121212; color: #fff; font-family: Arial, sans-serif; }
+        header { text-align: center; padding: 15px; background: #1e1e1e; }
+        .badge { background: #e74c3c; color: #fff; padding: 4px 12px; border-radius: 20px; font-weight: bold; font-size: 14px; }
+        #game-card { max-width: 500px; margin: 20px auto; background: #1e1e1e; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.5); }
+        .cover-container { width: 100%; height: 250px; background-image: url('separation-anxiety-cover.jpg'); background-size: cover; background-position: center; }
+        .content { padding: 20px; }
+        h1 { margin: 0 0 10px 0; font-size: 24px; color: #e74c3c; }
+        .meta-info { display: flex; gap: 10px; margin-bottom: 15px; font-size: 13px; color: #aaa; }
+        .description { font-size: 14px; line-height: 1.5; color: #ddd; margin-bottom: 15px; }
+        .details { font-size: 13px; color: #bbb; margin-bottom: 20px; }
+        .details ul { padding-left: 20px; margin: 0; }
+        .btn-play { display: block; width: 100%; padding: 12px; background: #c0392b; color: #fff; border: none; border-radius: 6px; font-weight: bold; font-size: 16px; cursor: pointer; text-align: center; text-decoration: none; }
+        .btn-play:hover { background: #a93226; }
+        #game-container { display: none; width: 100%; height: 100vh; }
+        #game { width: 100%; height: 100%; }
+    </style>
 </head>
 <body>
-<header id="main-header"><span class="badge">KUBO TOUCH</span></header>
-<main id="game-card">
- <div class="cover" role="img" aria-label="Capa do jogo Spider-Man Separation Anxiety"></div>
- <div class="content">
-  <h1>Spider-Man: Separation Anxiety</h1>
-  <div class="meta"><span>🎮 1–2 Jogadores</span><span>📅 1995</span><span>🏢 LJN / Acclaim</span></div>
-  <p class="description">Junte forças com o Homem-Aranha e Venom para enfrentar a ameaça dos simbiontes neste clássico de ação do Super Nintendo.</p>
-  <div class="details"><ul><li><strong>Gênero:</strong> Ação / Beat 'em Up</li><li><strong>Plataforma:</strong> Super Nintendo (SNES)</li></ul></div>
-  <button id="play" class="btn" onclick="startEmulator()">▶ JOGAR AGORA</button>
-  <div id="error-box"></div><div id="status" aria-live="polite">Pronto para verificar o arquivo do jogo.</div>
- </div>
-</main>
-<button id="back" onclick="location.reload()">← Voltar</button>
-<div id="game-container"><div id="game"></div></div>
-<script>
-const ROM_URL = new URL('./separationanxiety.sfc', location.href).href;
-const DATA_URL = 'https://cdn.emulatorjs.org/stable/data/';
-let started = false;
-function status(msg){const el=document.getElementById('status');if(el)el.textContent=msg;}
-function fail(msg){const e=document.getElementById('error-box');e.style.display='block';e.textContent=msg;status('Não foi possível iniciar o jogo.');document.getElementById('play').disabled=false;}
-async function checkRom(){
-  // HEAD permite detectar 404/arquivo errado sem baixar a ROM inteira duas vezes.
-  let r;
-  try { r=await fetch(ROM_URL,{method:'HEAD',cache:'no-store'}); }
-  catch(e){ throw new Error('Não consegui acessar a ROM. Confira a conexão e se separationanxiety.sfc está na raiz do repositório.'); }
-  if(!r.ok) throw new Error('A ROM retornou HTTP '+r.status+'. Confira se o arquivo se chama exatamente separationanxiety.sfc e está na mesma pasta do index.html.');
-  const type=(r.headers.get('content-type')||'').toLowerCase();
-  if(type.includes('text/html')) throw new Error('O servidor retornou uma página HTML em vez da ROM .sfc. Confira o arquivo no GitHub.');
-  const len=Number(r.headers.get('content-length')||0);
-  if(len && len<100000) throw new Error('O arquivo da ROM parece pequeno demais ('+len+' bytes). Pode ter sido enviado incorretamente ou ser um arquivo Git LFS pointer.');
-}
-async function startEmulator(){
- if(started)return;
- started=true;
- const play=document.getElementById('play');play.disabled=true;
- document.getElementById('error-box').style.display='none';
- document.getElementById('game-card').style.display='none';
- document.getElementById('main-header').style.display='none';
- document.getElementById('game-container').style.display='block';
- document.getElementById('back').style.display='block';
- status('1/3 — Verificando o arquivo separationanxiety.sfc…');
- try{await checkRom();}catch(e){fail(e.message||String(e));return;}
- status('2/3 — Carregando o EmulatorJS…');
- window.EJS_player='#game';
- window.EJS_core='snes';
- window.EJS_gameName='Spider-Man Separation Anxiety';
- window.EJS_gameUrl = 'Venom%20-%20Spider-Man%20-%20Separation%20Anxiety%20(USA).sfc';
- window.EJS_pathtodata=DATA_URL;
- window.EJS_color='#f39c12';
- window.EJS_language='pt-BR';
- // Não force startOnLoaded: a inicialização ocorre após fetch assíncrono e pode perder o gesto do clique.
- // O EmulatorJS inicia o core pelo fluxo padrão documentado.
 
- window.EJS_volume=0.7;
- window.EJS_mouse=false;
- window.EJS_multitap=false;
- window.EJS_ready=function(){status('EmulatorJS pronto. Aguarde o jogo carregar; se continuar preto, verifique a ROM e o Console (F12).');};
- window.EJS_onGameStart=function(){status('Jogo iniciado.');};
- const script=document.createElement('script');
- script.src=DATA_URL+'loader.js';
- script.async=true;
- script.onerror=function(){fail('Falha ao baixar o carregador do EmulatorJS. Verifique a conexão ou tente novamente mais tarde.');};
- script.onload=function(){status('Carregador recebido. Aguardando o núcleo SNES e a ROM…');setTimeout(function(){if(!document.querySelector('#game canvas')){status('Ainda não apareceu a imagem. Abra F12 > Console e envie uma captura das mensagens vermelhas. Confirme também se separationanxiety.sfc é uma ROM completa e válida.');}},25000);};
- document.body.appendChild(script);
-}
-</script>
+    <header>
+        <span class="badge">KUBO TOUCH</span>
+    </header>
+
+    <div id="game-card">
+        <div class="cover-container"></div>
+        <div class="content">
+            <h1>Venom • Spider-Man: Separation Anxiety</h1>
+            
+            <div class="meta-info">
+                <span>🎮 1-2 Jogadores</span>
+                <span>📅 1995</span>
+                <span>🕹️ Acclaim</span>
+            </div>
+
+            <p class="description">
+                Homem-Aranha e Venom unem forças novamente neste clássico Beat 'Em Up para derrotar os cinco simbiontes gerados a partir do traje de Venom e enfrentar a ameaça da Fundação Vida!
+            </p>
+
+            <div class="details">
+                <ul>
+                    <li><strong>🕹️ Gênero:</strong> Ação / Beat 'Em Up</li>
+                </ul>
+            </div>
+
+            <button class="btn-play" onclick="startEmulator()">JOGAR AGORA</button>
+        </div>
+    </div>
+
+    <div id="game-container">
+        <div id="game"></div>
+    </div>
+
+    <script type="text/javascript">
+        function startEmulator() {
+            // Esconde o card e mostra o contentor do jogo ocupando a tela toda
+            document.getElementById('game-card').style.display = 'none';
+            document.getElementById('game-container').style.display = 'block';
+
+            // Configurações do EmulatorJS
+            window.EJS_player = '#game';
+            window.EJS_core = 'snes9x';
+            window.EJS_gameName = 'Venom - Spider-Man - Separation Anxiety';
+            window.EJS_color = '#e74c3c';
+            window.EJS_startOnLoaded = true;
+            window.EJS_pathtodata = 'https://cdn.emulatorjs.org/stable/data/';
+            window.EJS_gameUrl = 'Venom%20-%20Spider-Man%20-%20Separation%20Anxiety%20(USA).sfc';
+            
+            // Injeta o loader do EmulatorJS com tratamento de erro
+            var script = document.createElement('script');
+            script.src = 'https://cdn.emulatorjs.org/stable/data/loader.js';
+            script.async = true;
+            script.onerror = function() {
+                alert('Erro ao carregar o motor do emulador. Verifique a sua ligação.');
+            };
+            document.body.appendChild(script);
+        }
+    </script>
 </body>
 </html>
