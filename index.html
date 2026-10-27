@@ -60,17 +60,19 @@ async function startEmulator(){
  window.EJS_pathtodata=DATA_URL;
  window.EJS_color='#f39c12';
  window.EJS_language='pt-BR';
- window.EJS_startOnLoaded=true;
+ // Não force startOnLoaded: a inicialização ocorre após fetch assíncrono e pode perder o gesto do clique.
+ // O EmulatorJS inicia o core pelo fluxo padrão documentado.
+
  window.EJS_volume=0.7;
  window.EJS_mouse=false;
  window.EJS_multitap=false;
- window.EJS_ready=function(){status('3/3 — EmulatorJS pronto. Se o jogo não aparecer, verifique se a ROM é válida.');};
+ window.EJS_ready=function(){status('EmulatorJS pronto. Aguarde o jogo carregar; se continuar preto, verifique a ROM e o Console (F12).');};
  window.EJS_onGameStart=function(){status('Jogo iniciado.');};
  const script=document.createElement('script');
  script.src=DATA_URL+'loader.js';
  script.async=true;
  script.onerror=function(){fail('Falha ao baixar o carregador do EmulatorJS. Verifique a conexão ou tente novamente mais tarde.');};
- script.onload=function(){status('3/3 — Carregador recebido. Aguardando o núcleo SNES e a ROM…');setTimeout(function(){if(!document.querySelector('#game canvas')){status('O carregador abriu, mas ainda não apareceu a imagem do jogo. Isso geralmente indica ROM inválida/incompleta ou erro do núcleo. Pressione F12 > Console e envie uma captura das mensagens vermelhas.');}},20000);};
+ script.onload=function(){status('Carregador recebido. Aguardando o núcleo SNES e a ROM…');setTimeout(function(){if(!document.querySelector('#game canvas')){status('Ainda não apareceu a imagem. Abra F12 > Console e envie uma captura das mensagens vermelhas. Confirme também se separationanxiety.sfc é uma ROM completa e válida.');}},25000);};
  document.body.appendChild(script);
 }
 </script>
