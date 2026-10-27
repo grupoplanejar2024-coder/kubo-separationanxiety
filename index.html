@@ -18,25 +18,26 @@
         .details ul { padding-left: 20px; margin: 0; }
         .btn-play { display: block; width: 100%; padding: 12px; background: #27ae60; color: #fff; border: none; border-radius: 6px; font-weight: bold; font-size: 16px; cursor: pointer; text-align: center; }
         .btn-play:hover { background: #219150; }
-   #game-container { 
-    display: none; 
-    width: 100vw; 
-    height: 100vh; 
-    position: fixed; 
-    top: 0; 
-    left: 0; 
-    z-index: 9999; 
-    background: #000; 
-}
-#game-container > div {
-    width: 100%;
-    height: 100%;
-}
-#game { 
-    width: 100%; 
-    height: 100%; 
-}     
-       
+
+        /* Correção para evitar a tela preta e garantir tela cheia */
+        #game-container { 
+            display: none; 
+            width: 100vw; 
+            height: 100vh; 
+            position: fixed; 
+            top: 0; 
+            left: 0; 
+            z-index: 9999; 
+            background: #000; 
+        }
+        #game-container > div {
+            width: 100%;
+            height: 100%;
+        }
+        #game { 
+            width: 100%; 
+            height: 100%; 
+        }
     </style>
 </head>
 <body>
@@ -53,14 +54,10 @@
                 <span>🎮 1-2 Jogadores</span>
                 <span>📅 1995</span>
                 <span>🏢 LJN / Acclaim</span>
-          <div id="game-container">
-    <div style="width:100%; height:100%;">
-        <div id="game"></div>
-    </div>
-</div>
+            </div>
 
             <p class="description">
-                Junte forças (ou jogue com um amigo) unindo o Homem-Aranha e o seu antigo rival Venom para deter a ameaça dos simbiontes e do Carnificina neste clássico frenético de pancadaria (*beat 'em up*) dos 16 bits!
+                Junte forças (ou jogue com um amigo) unindo o Homem-Aranha e o seu antigo rival Venom para deter a ameaça dos simbiontes e do Carnificina neste clássico de ação e porradaria!
             </p>
 
             <div class="details">
@@ -74,31 +71,34 @@
     </div>
 
     <div id="game-container">
-        <div id="game"></div>
+        <div style="width:100%; height:100%;">
+            <div id="game"></div>
+        </div>
     </div>
 
-  <script>
-function startEmulator() {
-    document.getElementById('game-container').style.display = 'block';
-    document.getElementById('game-card').style.display = 'none';
-    document.getElementById('main-header').style.display = 'none';
+    <script>
+        function startEmulator() {
+            document.getElementById('game-card').style.display = 'none';
+            document.getElementById('main-header').style.display = 'none';
+            document.getElementById('game-container').style.display = 'block';
 
-    window.EJS_player = "#game";
-    window.EJS_core = "snes";
-    window.EJS_gameName = "Spider-Man Separation Anxiety";
-    window.EJS_color = "#f39c12";
-    window.EJS_startOnLoaded = true;
-    window.EJS_pathtodata = "https://cdn.emulatorjs.org/stable/data/";
-    window.EJS_gameUrl =window.EJS_gameUrl = "https://grupoplanejar2024-coder.github.io/kubo-separationanxiety/separationanxiety.sfc";
-    const script = document.createElement("script");
-    script.src = window.EJS_pathtodata + "loader.js";
+            window.EJS_player = "#game";
+            window.EJS_core = "snes";
+            window.EJS_gameName = "Spider-Man Separation Anxiety";
+            window.EJS_color = "#f39c12";
+            window.EJS_startOnLoaded = true;
+            window.EJS_pathtodata = "https://cdn.emulatorjs.org/stable/data/";
+            window.EJS_gameUrl = "https://raw.githubusercontent.com/grupoplanejar2024-coder/kubo-separationanxiety/main/separationanxiety.sfc";
 
-    script.onerror = function() {
-        alert("Erro ao carregar o EmulatorJS. Verifique sua conexão e tente novamente.");
-    };
+            let script = document.createElement("script");
+            script.src = window.EJS_pathtodata + "loader.js";
+            
+            script.onerror = function() {
+                alert("Erro ao carregar o EmulatorJS. Verifique sua conexão e tente novamente.");
+            };
 
-    document.body.appendChild(script);
-}
-</script>
+            document.body.appendChild(script);
+        }
+    </script>
 </body>
 </html>
