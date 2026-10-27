@@ -76,25 +76,46 @@
 
 <script>
     function startEmulator() {
+   <script>
+    async function startEmulator() {
         document.getElementById('game-card').style.display = 'none';
         document.getElementById('main-header').style.display = 'none';
-        document.getElementById('game-container').style.display = 'block';
+        const container = document.getElementById('game-container');
+        container.style.display = 'block';
 
+        const romUrl = "separationanxiety.sfc"; // mesmo site (GitHub Pages)
+
+        function showError(msg) {
+            container.innerHTML =
+                '<div style="color:#fff;padding:20px;font-family:Arial;font-size:16px;line-height:1.5">' +
+                '<b style="color:#e74c3c">Erro:</b><br>' + msg +
+                '<br><br><button onclick="location.reload()" style="padding:10px 16px">Voltar</button></div>';
+        }
+
+        // 1) Testa se a ROM existe e tem tamanho válido
+        try {
+            const r = await fetch(romUrl, { method: "HEAD" });
+            if (!r.ok) throw new Error("ROM não encontrada (HTTP " + r.status + ")");
+            const size = parseInt(r.headers.get("content-length") || "0", 10);
+            if (size && size < 100000) throw new Error("O arquivo da ROM está muito pequeno (" + size + " bytes). Foi enviado errado ao GitHub.");
+        } catch (e) {
+            showError(e.message + "<br>Abra a página pelo link do GitHub Pages, não pelo arquivo local.");
+            return;
+        }
+
+        // 2) Configura o EmulatorJS
         window.EJS_player = "#game";
         window.EJS_core = "snes";
         window.EJS_gameName = "Spider-Man Separation Anxiety";
         window.EJS_color = "#f39c12";
         window.EJS_startOnLoaded = true;
         window.EJS_pathtodata = "https://cdn.emulatorjs.org/stable/data/";
-        window.EJS_gameUrl = "separationanxiety.sfc"; // caminho relativo (mesmo site)
+        window.EJS_gameUrl = romUrl;
 
+        // 3) Carrega o loader
         const script = document.createElement("script");
         script.src = window.EJS_pathtodata + "loader.js";
-        script.onerror = function () {
-            alert("Erro ao carregar o EmulatorJS. Verifique sua conexão e tente novamente.");
-        };
+        script.onerror = () => showError("Não foi possível carregar o EmulatorJS (cdn.emulatorjs.org). Verifique a internet.");
         document.body.appendChild(script);
     }
-</script>
-</body>
-</html>
+</script>     
