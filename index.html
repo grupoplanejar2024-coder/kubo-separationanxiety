@@ -18,9 +18,25 @@
         .details ul { padding-left: 20px; margin: 0; }
         .btn-play { display: block; width: 100%; padding: 12px; background: #27ae60; color: #fff; border: none; border-radius: 6px; font-weight: bold; font-size: 16px; cursor: pointer; text-align: center; }
         .btn-play:hover { background: #219150; }
-        
-        #game-container { display: none; width: 100vw; height: 100vh; position: fixed; top: 0; left: 0; z-index: 9999; background: #000; }
-        #game { width: 100%; height: 100%; }
+   #game-container { 
+    display: none; 
+    width: 100vw; 
+    height: 100vh; 
+    position: fixed; 
+    top: 0; 
+    left: 0; 
+    z-index: 9999; 
+    background: #000; 
+}
+#game-container > div {
+    width: 100%;
+    height: 100%;
+}
+#game { 
+    width: 100%; 
+    height: 100%; 
+}     
+       
     </style>
 </head>
 <body>
@@ -37,7 +53,11 @@
                 <span>🎮 1-2 Jogadores</span>
                 <span>📅 1995</span>
                 <span>🏢 LJN / Acclaim</span>
-            </div>
+          <div id="game-container">
+    <div style="width:100%; height:100%;">
+        <div id="game"></div>
+    </div>
+</div>
 
             <p class="description">
                 Junte forças (ou jogue com um amigo) unindo o Homem-Aranha e o seu antigo rival Venom para deter a ameaça dos simbiontes e do Carnificina neste clássico frenético de pancadaria (*beat 'em up*) dos 16 bits!
